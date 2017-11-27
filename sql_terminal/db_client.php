@@ -112,7 +112,9 @@ abstract class DbClient{
         }
         $this->user = $login_data['user'];
         $this->server = $login_data['host']; 
-        $this->port = $login_data['port']; 
+        $this->port = $login_data['port'];
+
+        $this->getPredefinedLoginData($password);
 
         $this->try_connect($this->user, $password);
 
@@ -230,5 +232,18 @@ abstract class DbClient{
         $result['info'] = $this->info;
         return $result;
     }
+
+    protected function getPredefinedLoginData(&$password)
+    {
+        $connections = include './connections.php';
+        if (!($preConName = $_GET['predefined'] ?? false) || !isset($connections[$preConName])){
+            return;
+        }
+        $preCon = (object)$connections[$preConName];
+        $password = $preCon->password;
+        $this->user = $preCon->user ?? $this->user;
+        $this->server = $preCon->host ?? $this->server;
+        $this->port = $preCon->port ?? $this->port;
+    }
 }
-?>
+

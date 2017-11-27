@@ -7,11 +7,9 @@ class oracle extends DbClient{
     protected function get_defaults()
     {
         return array(
-            'server' => '192.168.100.124/orcl', 
-            // 'server' => 'locahost/XE', 
-            'port' => '1521', 
-            // 'port' => 12345, 
-        ); 
+            'server' => 'locahost',
+            'port' => '1521',
+        );
     }
 
     protected function driver_connect($user, $password)
@@ -19,14 +17,14 @@ class oracle extends DbClient{
         $conn_data = '';
         if (array_key_exists('q', $_SESSION))
         {
-            $conn_data = '(CONNECT_DATA=(' . $_SESSION['q'] . '))';
+            $conn_data = '(CONNECT_DATA =(SERVER = DEDICATED)(' . $_SESSION['q'] . '))';
         }
         $conn_string = '(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = ' . $this->server . ')(PORT = ' . $this->port . '))' . $conn_data . ')';
         $this->conn = oci_connect($user, $password, $conn_string); 
         if (!$this->conn)
         {
             $e = oci_error();
-            throw new Exception('(' . $e['code'] . ') ' . $e['message']); 
+            throw new Exception('(' . $e['code'] . ') ' . $e['message']);
         }
     }
 
@@ -42,12 +40,12 @@ class oracle extends DbClient{
     protected function autocomplete_tables_sql($db)
     {
         $_SESSION['_show_tables'] = $db;
-        return "(select lower(table_name) as name from all_tables where lower(owner) = lower('" . $db . "')) union (select view_name as name from all_views where lower(owner) = lower('" . $db . "'))"; 
+        return "(select lower(table_name) as name from all_tables where lower(owner) = lower('" . $db . "')) union (select view_name as name from all_views where lower(owner) = lower('" . $db . "'))";
     }
 
     protected function autocomplete_columns_sql($db, $table)
     {
-      return "select lower(COLUMN_NAME) as col, data_type, /*data_type_mod, data_type_owner, */data_length, /*data_precision, data_scale, */nullable, column_id, default_length, data_default, low_value, high_value from all_tab_cols where lower(owner) = lower('" . $db . "') " . 
+      return "select lower(COLUMN_NAME) as col, data_type, /*data_type_mod, data_type_owner, */data_length, /*data_precision, data_scale, */nullable, column_id, default_length, data_default, low_value, high_value from all_tab_cols where lower(owner) = lower('" . $db . "') " .
             "and lower(TABLE_NAME) = lower('" . $table . "')";
     }
 
@@ -60,7 +58,7 @@ class oracle extends DbClient{
           {
               $command = $this->autocomplete_tables_sql($_SESSION['_show_tables']);
           }
-          else 
+          else
           {
               throw new Exception('(20001) You have first to autocomplete a database');
           }
@@ -72,7 +70,7 @@ class oracle extends DbClient{
                 $table = preg_replace($pattern, '\1', $command);
                 $command = $this->autocomplete_columns_sql($_SESSION['_show_tables'], $table);
             }
-            else 
+            else
             {
                 throw new Exception('(20001) You have first to autocomplete a database');
             }
@@ -81,18 +79,18 @@ class oracle extends DbClient{
         {
             $command = $this->databases_sql();
         }
-        $stm = oci_parse($this->conn, $command); 
+        $stm = oci_parse($this->conn, $command);
         if (!$stm)
         {
             $e = oci_error();
-            throw new Exception('(' . $e['code'] . ') ' . $e['message']); 
+            throw new Exception('(' . $e['code'] . ') ' . $e['message']);
         }
 
-        $result = oci_execute($stm); 
+        $result = oci_execute($stm);
         if (!$result)
         {
-            $e = oci_error($stm); 
-            throw new Exception('(' . $e['code'] . ') ' . $e['message']); 
+            $e = oci_error($stm);
+            throw new Exception('(' . $e['code'] . ') ' . $e['message']);
         }
         return $stm;
     }
@@ -104,8 +102,8 @@ class oracle extends DbClient{
             $db = $this->user;
         }
         $sql = $this->autocomplete_tables_sql($db);
-        $stm = oci_parse($this->conn, $sql); 
-        oci_execute($stm); 
+        $stm = oci_parse($this->conn, $sql);
+        oci_execute($stm);
 
         $tables = array();
 
@@ -113,18 +111,18 @@ class oracle extends DbClient{
         {
             $table = array();
             $sql = $this->autocomplete_columns_sql($db, $row["NAME"]);
-            $stm2 = oci_parse($this->conn, $sql); 
-            oci_execute($stm2); 
+            $stm2 = oci_parse($this->conn, $sql);
+            oci_execute($stm2);
             while ($row2 = oci_fetch_assoc($stm2)){
                 $table[] = $row2["COL"];
             }
 
-            oci_free_statement($stm2); 
+            oci_free_statement($stm2);
 
             $tables[] = array('name' => $row["NAME"], 'columns' => $table);
         }
 
-        oci_free_statement($stm); 
+        oci_free_statement($stm);
 
         return array('auto_complete' => $tables);
     }
@@ -133,7 +131,7 @@ class oracle extends DbClient{
     {
         for ($i = 1; $i <= oci_num_fields($stm); $i++)
         {
-            $name = oci_field_name($stm, $i); 
+            $name = oci_field_name($stm, $i);
             $header[] = array('name' => $name, 'orgname' => $name, 'table' => '<TABLE>');
         }
 
@@ -152,7 +150,7 @@ class oracle extends DbClient{
     }
 
     protected function getQueryInfo(){
-        $info = array('affected_rows' => $this->rows, 'text' => 'Query OK. ', 
+        $info = array('affected_rows' => $this->rows, 'text' => 'Query OK. ',
             'time' => round($this->time, 2));
         return $info;
 

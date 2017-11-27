@@ -97,7 +97,7 @@ function sqlQuery(command){
 
 $(document).ready(function(){
     var prev_command = '';
-    $('body').terminal(function(command, term){
+    var terminal = $('body').terminal(function(command, term){
         TERM = term;
         r = /^[\s]*delimiter[\s]+([^\s]+)[\s]*$/gi;
         if (command.match(r) && prev_command == '')
@@ -171,9 +171,7 @@ $(document).ready(function(){
             term.set_prompt(PROMPT);
         },
         login: function(user, pass, callback){
-            debugger;
             AUTOC = null;
-            // alert('zzzz');
 			if (user.match(/^:/)){
 				user = user.replace(/^:/g, '');
 				if (typeof(connections[user]) != 'undefined'){
@@ -185,10 +183,10 @@ $(document).ready(function(){
             var type = '';
             if (user.match(r))
             {
-                type = '?type=' + user.replace(r, '$1');
+                type = 'type=' + user.replace(r, '$1');
                 user = user.replace(r, '$2');
             }
-            $.jrpc('rpc-client.php' + type, 'login-attempt', 'login', {'user' : user, password: pass}, function(json){
+            $.jrpc('rpc-client.php?' + type + '&' + window.location.search.substr(1), 'login-attempt', 'login', {'user' : user, password: pass}, function(json){
                 if (json.error == null){
                     var s = json.result.server != null ? json.result.server : 'localhost';
                     PROMPT = json.result.user + "@" + s + '> ';
@@ -216,6 +214,10 @@ $(document).ready(function(){
         max_matches: client_settings.max_matches
     });
 
+    if ($.getPredefinedConnection()){
+        terminal.logout();
+    }
+
     $('body').append('<div id="dialog"></div>');
 
     $('#dialog').dialog({
@@ -227,4 +229,4 @@ $(document).ready(function(){
         position: 'center',
         modal: true
     })
-})
+});

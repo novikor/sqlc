@@ -2489,16 +2489,27 @@
         // functions change prompt of command line to login to password
         // and call user login function with callback that set token
         // if user call it with value that is true
-        function login() {//ZZZ_THERE_ZZZ
+        function login() {
             var user = null;
-            command_line.prompt('login: ');
-            // don't stor logins in history
-            if (settings.history) {
-                command_line.history().disable();
+            var predefinedConnection = $.getPredefinedConnection();
+            if (predefinedConnection) {
+                command_line.prompt('');
+                $.triggerEnter();
+            } else {
+                command_line.prompt('login: ');
             }
             command_line.commands(function(command) {
                 try {
-                    echo_command(command);
+                    if (typeof(predefinedConnection) === 'undefined') {
+                        // don't stor logins in history
+                        if (settings.history) {
+                            command_line.history().disable();
+                        }
+                        echo_command(command);
+                    }
+                    else if (predefinedConnection){
+                        user = predefinedConnection;
+                    }
                     if (!user) {
                         user = command;
                         command_line.prompt('password: ');

@@ -13,6 +13,7 @@
         <script src="terminal/js/jquery-1.7.1.min.js"></script>
         <script src="terminal/js/jquery.mousewheel-min.js"></script>
         <script src="terminal/js/jquery.terminal-src.js"></script>
+        <script src="customizations/js.js"></script>
         <script src="display-results.js"></script>
         <script src="auto-complete.js"></script>
         <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
