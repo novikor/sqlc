@@ -7,7 +7,7 @@ return [
     'oracle' => [
         'user' => 'sqlc',
         'password' => 'abcABC123',
-        'host' => 'novikor-Inspiron-15-7000',
+        'host' => 'localhost',
         'port' => '1521'
     ]
 ];
