@@ -1,0 +1,32 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer      $this
+ * @var \Zend\Db\Metadata\Object\TableObject $table
+ * @var \Zend\Db\Adapter\Adapter $adapter
+ */
+
+$rowsCount = $this->tableHelper()->getRowsCount($adapter, $table->getName());
+
+?>
+<table class="table table-condensed table-hover">
+    <caption class="well well-sm">
+        <strong>Data</strong>
+    </caption>
+    <thead class="thead-dark">
+    <th>Rows count</th>
+    <th>Disk space usage</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <?= $rowsCount ?>
+            </td>
+            <td>
+                <?= 'Not very much' ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+

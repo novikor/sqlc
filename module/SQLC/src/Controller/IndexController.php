@@ -7,13 +7,21 @@
 
 namespace SQLC\Controller;
 
+use SQLC\SQLC;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class IndexController  extends AbstractActionController
+class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        $adapters = [
+            'MySQL'           => SQLC::get()->mySql(),
+            'Oracle Database' => SQLC::get()->oracle(),
+        ];
+
+        return new ViewModel([
+            'adapters' => $adapters,
+        ]);
     }
 }

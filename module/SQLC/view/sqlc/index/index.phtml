@@ -1,1 +1,59 @@
-<?php echo __FILE__;
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \Zend\Db\Adapter\Adapter[]      $adapters
+ */
+?>
+<div class="container-fluid">
+    <?php foreach ($adapters as $databaseName => $adapter): ?>
+        <?php
+        $metadata = new Zend\Db\Metadata\Metadata($adapter);
+
+        $tables = $metadata->getTables();
+        usort($tables, function ($a, $b) {
+            return $a->getName() > $b->getName();
+        });
+        ?>
+        <div class="col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><?= $this->escapeHtml($databaseName) ?></div>
+                <div class="panel-body">
+                    <div class="panel-group">
+                        <?php
+                        /** @var \Zend\Db\Metadata\Object\TableObject $table */
+                        foreach ($tables as $table): ?>
+                            <?php if (strpos($table->getName(), '$') !== false) continue; ?>
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <?= strtoupper($table->getName()) ?>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-lg-6">
+                                        <?= $this->partial(
+                                            'sqlc/index/tableColumns',
+                                            [
+                                                'table' => $table,
+                                            ]
+                                        )
+                                        ?>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <?= $this->partial(
+                                            'sqlc/index/tableData',
+                                            [
+                                                'table'      => $table,
+                                                'adapter' => $adapter,
+                                            ]
+                                        )
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>

@@ -27,7 +27,7 @@ return [
             ],
             'oracle' => [
                 'driver'            => 'OCI8',
-                'connection_string' => 'localhost:1521?SERVICE_NAME = XE',
+                'connection_string' => 'localhost/XE',
                 'character_set'     => 'AL32UTF8',
             ],
         ],

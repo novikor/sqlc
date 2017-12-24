@@ -1,0 +1,31 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer      $this
+ * @var \Zend\Db\Metadata\Object\TableObject $table
+ */
+?>
+<table class="table table-condensed table-hover">
+    <caption class="well well-sm">
+        <strong>Columns</strong>
+    </caption>
+    <thead class="thead-dark">
+    <th>Column</th>
+    <th>Type</th>
+    </thead>
+    <tbody>
+    <?php foreach ($table->getColumns() as $column): ?>
+        <?php /** @var \Zend\Db\Metadata\Object\ColumnObject $column */ ?>
+        <tr>
+            <td>
+                <?= strtoupper($column->getName()) ?>
+            </td>
+            <td>
+                <?= strtoupper($column->getDataType()) ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+
