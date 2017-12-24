@@ -12,5 +12,29 @@
  */
 
 return [
-    // ...
+    'db'              => [
+        // A workaround for ZF dev tools
+        'driver'         => 'Pdo',
+        'dsn'            => 'mysql:dbname=zf3;host=localhost',
+        'driver_options' => [
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'',
+        ],
+
+        'adapters' => [
+            'mysql'  => [
+                'driver' => 'Pdo',
+                'dsn'    => 'mysql:dbname=sqlc;host=localhost',
+            ],
+            'oracle' => [
+                'driver'            => 'OCI8',
+                'connection_string' => 'localhost:1521?SERVICE_NAME = XE',
+                'character_set'     => 'AL32UTF8',
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'abstract_factories' => [
+            'Zend\Db\Adapter\AdapterAbstractServiceFactory',
+        ],
+    ],
 ];

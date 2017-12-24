@@ -9,6 +9,7 @@ namespace SQLC;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\Mvc\MvcEvent;
 
 class Module implements AutoloaderProviderInterface, ConfigProviderInterface
 {
@@ -31,6 +32,18 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
                 ),
             ),
         );
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => include __DIR__ . '/config/factories.php'
+        );
+    }
+
+    public function onBootstrap(MvcEvent $mvcEvent)
+    {
+        SQLC::init($mvcEvent);
     }
 
 }
