@@ -11,6 +11,13 @@ use SQLC\SQLC;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+/**
+ * Class IndexController
+ *
+ * @package SQLC\Controller
+ *
+ * @method \Zend\Mvc\Plugin\FlashMessenger\FlashMessenger flashMessenger()
+ */
 class IndexController extends AbstractActionController
 {
     public function indexAction()
@@ -23,5 +30,26 @@ class IndexController extends AbstractActionController
         return new ViewModel([
             'adapters' => $adapters,
         ]);
+    }
+
+    public function generateAction()
+    {
+        $post = $this->params()->fromPost();
+        if(!filter_var_array(
+            $post,
+            ['table' => FILTER_DEFAULT, 'rowsCount' => FILTER_VALIDATE_INT]
+        )){
+            $this->flashMessenger()->addErrorMessage('Invalid data received');
+            $this->redirect()->toRoute('home');
+        }
+
+        $table = $post['table'];
+        $rowsCount = $post['rowsCount'];
+
+        $this->flashMessenger()->addSuccessMessage(sprintf(
+            'Successfully generated %s rows for %s',
+            $rowsCount, $table
+        ));
+        $this->redirect()->toRoute('home');
     }
 }

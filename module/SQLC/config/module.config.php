@@ -8,12 +8,13 @@
 namespace SQLC;
 
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
-    'router'       => [
+    'router'             => [
         'routes' => [
-            'home' => [
+            'home'     => [
                 'type'    => Literal::class,
                 'options' => [
                     'route'    => '/',
@@ -23,9 +24,19 @@ return [
                     ],
                 ],
             ],
+            'generate' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/generate[/]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'generate',
+                    ],
+                ],
+            ],
         ],
     ],
-    'controllers'  => [
+    'controllers'        => [
         'factories'  => [
             Controller\IndexController::class => InvokableFactory::class,
         ],
@@ -33,12 +44,13 @@ return [
             'SQLC/Controller/SQLC' => Controller\IndexController::class,
         ],
     ],
-    'view_helpers' => [
+    'view_helpers'       => [
         'invokables' => [
             'tableHelper' => View\Helper\Table::class,
+            'helper' => View\Helper\Data::class,
         ],
     ],
-    'view_manager' => [
+    'view_manager'       => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
@@ -54,6 +66,13 @@ return [
         ],
         'template_path_stack'      => [
             __DIR__ . '/../view',
+        ],
+    ],
+    'view_helper_config' => [
+        'flashmessenger' => [
+            'message_open_format'      => '<div%s><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><ul><li>',
+            'message_close_string'     => '</li></ul></div>',
+            'message_separator_string' => '</li><li>',
         ],
     ],
 ];
