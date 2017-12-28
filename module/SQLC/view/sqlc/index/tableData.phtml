@@ -6,11 +6,11 @@
  */
 
 $rowsCount = $this->tableHelper()->getRowsCount($adapter, $table->getName());
-
+$tableSize = $this->tableHelper()->getTableSize($adapter, $table->getName());
 ?>
 <table class="table table-condensed table-hover">
     <caption class="well well-sm">
-        <strong>Data</strong>
+        <strong>Table info</strong>
     </caption>
     <thead class="thead-dark">
     <th>Rows count</th>
@@ -22,7 +22,8 @@ $rowsCount = $this->tableHelper()->getRowsCount($adapter, $table->getName());
                 <?= $rowsCount ?>
             </td>
             <td>
-                <?= 'Not very much' ?>
+                <span class="col-lg-3"><?= $tableSize ?></span>
+                <span class="col-lg-3 text-right">KBytes</span>
             </td>
         </tr>
     </tbody>
