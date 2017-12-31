@@ -32,8 +32,7 @@ class Api
      * @param int    $numRows
      *
      * @return array
-     * @throws \InvalidArgumentException
-     *
+     * @throws \Exception
      */
     public function requestData(string $tableName, int $numRows): array
     {
@@ -49,7 +48,13 @@ class Api
         $response = curl_exec($ch);
         curl_close($ch);
 
-        $data = unserialize($response);
+        $data = json_decode($response, true);
+
+        if (!$data) {
+            die ($response);
+
+            throw new \Exception("Invalid response: $response");
+        }
 
         return $data;
     }

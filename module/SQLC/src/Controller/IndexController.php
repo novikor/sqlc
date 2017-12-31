@@ -38,23 +38,29 @@ class IndexController extends AbstractActionController
         $table = $post['table'] ?? false;
         $rowsCount = $post['rowsCount'] ?? false;
 
-        if(!$table || !$rowsCount || $rowsCount <= 0){
-            $this->flashMessenger()->addErrorMessage('Invalid data received');
+        if (!$table || !$rowsCount || $rowsCount <= 0) {
+            $this->flashMessenger()->addErrorMessage('Invalid table or rowsCount received');
             $this->redirect()->toRoute('home');
+
             return;
         }
 
+        try {
         $api = new \SQLC\GenerateData\Model\Api();
-
         $data = $api->requestData($table, $rowsCount);
 
-        var_dump($data);
-        die;
+        $importModel = new \SQLC\GenerateData\Model\MultiImport();
 
-        $this->flashMessenger()->addSuccessMessage(sprintf(
-            'Successfully generated %s rows for %s',
-            $rowsCount, $table
-        ));
+            $importModel->importData($table, $data);
+
+            $this->flashMessenger()->addSuccessMessage(sprintf(
+                'Successfully generated %s rows for %s',
+                $rowsCount, $table
+            ));
+        } catch (\Exception $e) {
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
+        }
+
         $this->redirect()->toRoute('home');
     }
 }

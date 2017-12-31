@@ -1,5 +1,5 @@
 <?php
-
+ini_set('memory_limit', '1G');
 require_once("../library.php");
 Core::init("generation");
 

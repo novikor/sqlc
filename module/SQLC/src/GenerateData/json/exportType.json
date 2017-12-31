@@ -1,8 +1,9 @@
 {
   "export": {
-    "type": "ProgrammingLanguage",
+    "type": "JSON",
     "settings": {
-      "language": "PHP"
+      "stripWhitespace": false,
+      "dataStructureFormat": "simple"
     }
   }
 }
