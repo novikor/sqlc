@@ -49,3 +49,13 @@ IS
   BEGIN
     ctx_ddl.sync_index(indexName);
   END;
+
+
+CREATE OR REPLACE PROCEDURE REFRESHSTATISTICS AS
+  strSchema VARCHAR2(20);
+
+  BEGIN
+    dbms_stats.gather_schema_stats(USER, CASCADE => TRUE );
+  END;
+
+CALL REFRESHSTATISTICS();
