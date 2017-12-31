@@ -1,0 +1,13 @@
+{
+  "rows": [
+    {
+      "type": "TextRandom",
+      "title": "TEXT",
+      "settings": {
+        "startsWithLipsum": false,
+        "minWords": 20,
+        "maxWords": 500
+      }
+    }
+  ]
+}

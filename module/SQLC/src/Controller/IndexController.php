@@ -35,16 +35,21 @@ class IndexController extends AbstractActionController
     public function generateAction()
     {
         $post = $this->params()->fromPost();
-        if(!filter_var_array(
-            $post,
-            ['table' => FILTER_DEFAULT, 'rowsCount' => FILTER_VALIDATE_INT]
-        )){
+        $table = $post['table'] ?? false;
+        $rowsCount = $post['rowsCount'] ?? false;
+
+        if(!$table || !$rowsCount || $rowsCount <= 0){
             $this->flashMessenger()->addErrorMessage('Invalid data received');
             $this->redirect()->toRoute('home');
+            return;
         }
 
-        $table = $post['table'];
-        $rowsCount = $post['rowsCount'];
+        $api = new \SQLC\GenerateData\Model\Api();
+
+        $data = $api->requestData($table, $rowsCount);
+
+        var_dump($data);
+        die;
 
         $this->flashMessenger()->addSuccessMessage(sprintf(
             'Successfully generated %s rows for %s',

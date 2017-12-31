@@ -125,38 +125,23 @@ END;
 
 
 	private function generatePHP($data) {
-		$content = "";
-		if ($data["isFirstBatch"]) {
-			$content .= "<?" . "php\n\n\$data = array(\n";
-		}
+		$result = [];
 
 		$numCols = count($data["colData"]);
 		$numRows = count($data["rowData"]);
 
 		for ($i=0; $i<$numRows; $i++) {
-			$content .= "\tarray(";
 
-			$pairs = array();
 			for ($j=0; $j<$numCols; $j++) {
 				if ($this->numericFields[$j]) {
-					$pairs[] = "\"{$data["colData"][$j]}\"=>{$data["rowData"][$i][$j]}";
+					$result[] = [$data["colData"][$j] => $data["rowData"][$i][$j]];
 				} else {
-					$pairs[] = "\"{$data["colData"][$j]}\"=>\"{$data["rowData"][$i][$j]}\"";
+					$result[] = [$data["colData"][$j] => [$data["rowData"][$i][$j]]];
 				}
 			}
-			$content .= implode(",", $pairs);
-
-			if ($data["isLastBatch"] && $i == $numRows - 1) {
-				$content .= ")\n";
-			} else {
-				$content .= "),\n";
-			}
 		}
 
-		if ($data["isLastBatch"]) {
-			$content .= ");\n\n?>";
-		}
-		return $content;
+        return serialize($result);
 	}
 
     private function generateJS($data) {

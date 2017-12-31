@@ -1,0 +1,12 @@
+{
+  "rows": [
+    {
+      "type": "NumberRange",
+      "title": "NUM",
+      "settings": {
+        "rangeMin": -2147483648,
+        "rangeMax": 2147483647
+      }
+    }
+  ]
+}
