@@ -14,6 +14,17 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 return [
     'router'             => [
         'routes' => [
+            // a FAKE route if Apache virtual host is configured correctly
+            'terminal'     => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/terminal/',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'home'     => [
                 'type'    => Literal::class,
                 'options' => [
