@@ -13,6 +13,10 @@
         return connections[$.urlParam("predefined")];
     };
 
+    $.getPredefinedConnectionScript = function () {
+        return connectionScripts[$.urlParam("predefined")];
+    };
+
     $.triggerEnter = function (selector, interval) {
         selector = selector || 'body';
         interval = interval || 500;

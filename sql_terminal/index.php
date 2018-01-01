@@ -48,6 +48,18 @@
         </style>
     </head>
     <body>
+    <?php
+    $predefined = $_GET['predefined'] ?? false;
+    if($predefined):
+    ?>
+        <h1>
+            <?php if($predefined == 'mysql'): ?>
+            <a href="http://sqlc.local/terminal/?predefined=oracle">Switch to Oracle</a>
+            <?php elseif ($predefined == 'oracle'):?>
+            <a href="http://sqlc.local/terminal/?predefined=mysql">Switch to MySQL</a>
+            <?php endif; ?>
+        </h1>
+    <?php endif; ?>
         <div id="full-data"></div>
         <div id="terminal"></div>
     </body>

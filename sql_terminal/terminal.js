@@ -160,6 +160,10 @@ $(document).ready(function(){
                 }
                 term.enable();
             }
+            // CTRL + L
+            if (e.which == 76 && e.ctrlKey){
+                term.clear();
+            }
 
             return true;
         },
@@ -216,6 +220,11 @@ $(document).ready(function(){
 
     if ($.getPredefinedConnection()){
         terminal.logout();
+        terminal.clear();
+        $.triggerEnter();
+        setTimeout(function(){
+            eval($.getPredefinedConnectionScript());
+        }, 1500);
     }
 
     $('body').append('<div id="dialog"></div>');
