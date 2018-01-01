@@ -222,9 +222,17 @@ $(document).ready(function(){
         terminal.logout();
         terminal.clear();
         $.triggerEnter();
-        setTimeout(function(){
-            eval($.getPredefinedConnectionScript());
-        }, 1500);
+
+        var interval = setInterval(function () {
+            try {
+                eval($.getPredefinedConnectionScript());
+                clearInterval(interval);
+            } catch (TypeError) {
+                $.triggerEnter();
+                console.log('Trying to switch database..')
+            }
+        }, 1000);
+
     }
 
     $('body').append('<div id="dialog"></div>');
