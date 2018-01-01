@@ -66,4 +66,9 @@ class Table
     {
         SQLC::get()->oracle()->query('CALL REFRESHSTATISTICS()', Adapter::QUERY_MODE_EXECUTE);
     }
+
+    public function refreshFullText()
+    {
+        SQLC::get()->oracle()->query('CALL REINDEXTEXT(\'fulltextindex\')', Adapter::QUERY_MODE_EXECUTE);
+    }
 }

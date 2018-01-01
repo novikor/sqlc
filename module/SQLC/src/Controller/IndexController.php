@@ -109,4 +109,20 @@ class IndexController extends AbstractActionController
 
         $this->redirect()->toRoute('home');
     }
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function refreshFullTextAction()
+    {
+        try {
+            SQLC::getServiceLocator()->build(\SQLC\Model\Table::class)->refreshFullText();
+            $this->flashMessenger()->addSuccessMessage(
+                'Oracle Text indexes have been refreshed successfully'
+            );
+        } catch (\Exception $e) {
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
+        }
+
+        $this->redirect()->toRoute('home');
+    }
 }

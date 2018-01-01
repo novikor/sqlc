@@ -20,7 +20,7 @@
                 <div class="panel-heading">
                     <div>
                         <strong><?= $this->escapeHtml($databaseName) ?></strong>
-                        <?php if (get_class($adapter->getPlatform()) == \Zend\Db\Adapter\Platform\Oracle::class): ?>
+                        <?php if ($this->tableHelper()->isOracle($adapter)): ?>
                             <a style="padding: 0 8px" class="btn btn-sm btn-info pull-right"
                                href="<?= $this->url('refreshStatistics') ?>">
                                 Refresh disk space statistics
@@ -38,6 +38,12 @@
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <?= strtoupper($table->getName()) ?>
+                                    <?php if ($table->getName() == 'TEXT_FULLTEXTINDEX'): ?>
+                                        <a style="padding: 0 8px" class="btn btn-sm btn-info pull-right"
+                                           href="<?= $this->url('refreshFullText') ?>">
+                                            Refresh indexes
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-lg-6">

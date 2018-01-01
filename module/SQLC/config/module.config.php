@@ -54,6 +54,16 @@ return [
                     ],
                 ],
             ],
+            'refreshFullText' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/refreshFullText[/]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'refreshFullText',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers'        => [

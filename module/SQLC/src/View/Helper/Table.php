@@ -50,4 +50,14 @@ class Table extends AbstractHelper
     {
         return $this->tableModel->getTableSize($adapter, $table);
     }
+
+    /**
+     * @param \Zend\Db\Adapter\Adapter $adapter
+     *
+     * @return bool
+     */
+    public function isOracle(Adapter $adapter)
+    {
+       return get_class($adapter->getPlatform()) == \Zend\Db\Adapter\Platform\Oracle::class;
+    }
 }
