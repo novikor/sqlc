@@ -34,6 +34,16 @@ return [
                     ],
                 ],
             ],
+            'cleanTable' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/cleanTable[/]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'cleanTable',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers'        => [

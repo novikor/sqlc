@@ -32,30 +32,53 @@ class IndexController extends AbstractActionController
         ]);
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
     public function generateAction()
     {
         $post = $this->params()->fromPost();
         $table = $post['table'] ?? false;
         $rowsCount = $post['rowsCount'] ?? false;
 
-        if (!$table || !$rowsCount || $rowsCount <= 0) {
-            $this->flashMessenger()->addErrorMessage('Invalid table or rowsCount received');
-            $this->redirect()->toRoute('home');
-
-            return;
-        }
-
         try {
-        $api = new \SQLC\GenerateData\Model\Api();
-        $data = $api->requestData($table, $rowsCount);
+            if (!$table || !$rowsCount || $rowsCount <= 0) {
+                throw new \Exception('Invalid table or rowsCount received');
+            }
 
-        $importModel = new \SQLC\GenerateData\Model\MultiImport();
+            /** @var \SQLC\GenerateData\Model\Api $api */
+            $api = SQLC::getServiceLocator()->build(\SQLC\GenerateData\Model\Api::class);
+            $data = $api->requestData($table, $rowsCount);
+
+            /** @var \SQLC\GenerateData\Model\MultiImport $importModel */
+            $importModel = SQLC::getServiceLocator()->build(\SQLC\GenerateData\Model\MultiImport::class);
 
             $importModel->importData($table, $data);
 
             $this->flashMessenger()->addSuccessMessage(sprintf(
                 'Successfully generated %s rows for %s',
                 $rowsCount, $table
+            ));
+        } catch (\Exception $e) {
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
+        }
+
+        $this->redirect()->toRoute('home');
+    }
+
+    public function cleanTableAction()
+    {
+        $post = $this->params()->fromPost();
+        $table = $post['table'] ?? false;
+
+        try {
+            if (!is_string($table)) {
+                throw new \Exception('Invalid table name received');
+            }
+
+            $this->flashMessenger()->addSuccessMessage(sprintf(
+                'Successfully cleaned %s (Data & Sequence)',
+                $table
             ));
         } catch (\Exception $e) {
             $this->flashMessenger()->addErrorMessage($e->getMessage());

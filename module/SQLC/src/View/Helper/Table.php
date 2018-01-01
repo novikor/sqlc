@@ -2,13 +2,25 @@
 
 namespace SQLC\View\Helper;
 
+use SQLC\SQLC;
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Sql\Sql;
 use Zend\View\Helper\AbstractHelper;
 
 class Table extends AbstractHelper
 {
+    /** @var \SQLC\Model\Table */
+    protected $tableModel;
+
+    /**
+     * Table constructor.
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function __construct()
+    {
+        $this->tableModel = SQLC::getServiceLocator()->build(\SQLC\Model\Table::class);
+    }
+
     /**
      * @return $this
      */
@@ -25,16 +37,7 @@ class Table extends AbstractHelper
      */
     public function getRowsCount(Adapter $adapter, string $table)
     {
-        $sql = new Sql($adapter);
-        $result = $sql->prepareStatementForSqlObject(
-            $sql->select()
-                ->from($table)
-                ->columns(['cnt' => new Expression('COUNT(*)')])
-        )->execute();
-
-        $cnt = $result->current()['cnt'];
-
-        return $cnt;
+        return $this->tableModel->getRowsCount($adapter, $table);
     }
 
     /**
@@ -45,13 +48,6 @@ class Table extends AbstractHelper
      */
     public function getTableSize(Adapter $adapter, string $table)
     {
-        $result = $adapter->query(
-            'SELECT getTableSize(:tableName) AS SIZE_KB FROM dual',
-            ['tableName' => $table]
-        );
-
-        $size = $result->current()['SIZE_KB'];
-
-        return $size;
+        return $this->tableModel->getTableSize($adapter, $table);
     }
 }
