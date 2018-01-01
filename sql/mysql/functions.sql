@@ -5,17 +5,14 @@ CREATE FUNCTION getTableSize(tableName VARCHAR(50))
   RETURNS INTEGER
   BEGIN
     DECLARE kb_size INTEGER;
-    SELECT
-      ROUND((TABLE_ROWS * AVG_ROW_LENGTH) / 1024) AS `Size`
+    SELECT ((data_length + index_length) / 1024) as size
     INTO kb_size
-    FROM
-      information_schema.TABLES
-    WHERE
-      TABLE_SCHEMA = DATABASE()
-      AND TABLE_NAME = tableName;
-
+    FROM information_schema.TABLES
+    WHERE table_schema = DATABASE()
+          AND table_name = tableName;
     RETURN kb_size;
   END;
 1488;
 
-SELECT getTableSize('text_fulltextindex') as SIZE_KB FROM dual;
+SELECT getTableSize('text_fulltextindex') AS SIZE_KB
+FROM dual;

@@ -19,12 +19,12 @@ IS kb_size INTEGER;
     INTO kb_size
     FROM user_segments
     --    WHERE segment_type='TABLE'
-    WHERE segment_name LIKE CONCAT('%', CONCAT(tableName, '%'));
+    WHERE segment_name LIKE CONCAT('%', CONCAT(UPPER(tableName), '%'));
     RETURN kb_size;
   END;
 
 SELECT getTableSize('text_fulltextindex') as SIZE_KB FROM dual;
 
 
-SELECT *
-FROM user_tables
+-- SELECT *
+-- FROM user_tables
