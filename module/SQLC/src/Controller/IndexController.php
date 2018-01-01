@@ -92,4 +92,21 @@ class IndexController extends AbstractActionController
 
         $this->redirect()->toRoute('home');
     }
+
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function refreshStatisticsAction()
+    {
+        try {
+            SQLC::getServiceLocator()->build(\SQLC\Model\Table::class)->refreshStatistics();
+            $this->flashMessenger()->addSuccessMessage(
+                'Oracle schema statistics have been refresh successfully'
+            );
+        } catch (\Exception $e) {
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
+        }
+
+        $this->redirect()->toRoute('home');
+    }
 }

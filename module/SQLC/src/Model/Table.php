@@ -62,4 +62,8 @@ class Table
         }
     }
 
+    public function refreshStatistics()
+    {
+        SQLC::get()->oracle()->query('CALL REFRESHSTATISTICS()', Adapter::QUERY_MODE_EXECUTE);
+    }
 }

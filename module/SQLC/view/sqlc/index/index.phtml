@@ -17,7 +17,17 @@
         ?>
         <div class="col-lg-6">
             <div class="panel panel-primary">
-                <div class="panel-heading"><?= $this->escapeHtml($databaseName) ?></div>
+                <div class="panel-heading">
+                    <div>
+                        <strong><?= $this->escapeHtml($databaseName) ?></strong>
+                        <?php if (get_class($adapter->getPlatform()) == \Zend\Db\Adapter\Platform\Oracle::class): ?>
+                            <a style="padding: 0 8px" class="btn btn-sm btn-info pull-right"
+                               href="<?= $this->url('refreshStatistics') ?>">
+                                Refresh disk space statistics
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <div class="panel-body">
                     <div class="panel-group">
                         <?php

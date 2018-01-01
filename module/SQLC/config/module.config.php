@@ -44,6 +44,16 @@ return [
                     ],
                 ],
             ],
+            'refreshStatistics' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/refreshStatistics[/]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'refreshStatistics',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers'        => [
