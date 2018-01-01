@@ -18,12 +18,12 @@ IS kb_size INTEGER;
       SUM(bytes)/1024 as kb_size
     INTO kb_size
     FROM user_segments
-    --    WHERE segment_type='TABLE'
-    WHERE segment_name LIKE CONCAT('%', CONCAT(UPPER(tableName), '%'));
+       WHERE segment_type='TABLE'
+    AND segment_name = UPPER(tableName);
     RETURN kb_size;
   END;
 
-SELECT getTableSize('text_fulltextindex') as SIZE_KB FROM dual;
+-- SELECT getTableSize('text_fulltextindex') as SIZE_KB FROM dual;
 
 
 -- SELECT *

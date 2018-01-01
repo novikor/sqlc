@@ -2,6 +2,7 @@
 
 namespace SQLC\Model;
 
+use SQLC\SQLC;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Sql;
@@ -55,7 +56,10 @@ class Table
 
     public function clearTable(string $table)
     {
-        //TODO
+        /** @var Adapter $adapter */
+        foreach (SQLC::get()->adapters() as $adapter){
+            $adapter->query('call clearTable(:tableName)', [':tableName' => $table]);
+        }
     }
 
 }

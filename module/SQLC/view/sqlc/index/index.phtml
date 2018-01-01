@@ -69,6 +69,8 @@
                                     <div class="col-lg-2">
                                         <form action="<?= $this->url('cleanTable') ?>" method="post">
                                             <p>
+                                                <input type="hidden" name="table"
+                                                       value="<?= strtolower($table->getName()) ?>">
                                                 <button class="btn btn-danger" type="submit">Clean table</button>
                                             </p>
                                         </form>
