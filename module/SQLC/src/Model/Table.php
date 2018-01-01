@@ -53,4 +53,9 @@ class Table
         return $size;
     }
 
+    public function clearTable(string $table)
+    {
+        //TODO
+    }
+
 }

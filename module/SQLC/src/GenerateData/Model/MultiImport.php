@@ -10,6 +10,7 @@ namespace SQLC\GenerateData\Model;
 
 use SQLC\SQLC;
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\TableGateway;
 
 /**
  * Class MultiImport
@@ -18,17 +19,6 @@ use Zend\Db\Adapter\Adapter;
  */
 class MultiImport
 {
-    /** @var Adapter[] */
-    protected $adapters;
-
-    /**
-     * MultiImport constructor.
-     */
-    public function __construct()
-    {
-        $this->adapters = [SQLC::get()->mySql(), SQLC::get()->oracle()];
-    }
-
     /**
      * @param string $table
      * @param array  $data
@@ -37,7 +27,7 @@ class MultiImport
      */
     public function importData(string $table, array $data)
     {
-        foreach ($this->adapters as $adapter) {
+        foreach (SQLC::get()->adapters() as $adapter) {
             $this->import($adapter, $table, $data);
         }
     }
@@ -55,14 +45,14 @@ class MultiImport
         if ($adapter->getPlatform()->getName() == 'MySQL') {
             $table = strtolower($table);
         }
-        $tableGateway = new \Zend\Db\TableGateway\TableGateway($table, $adapter);
+
+        $tableGateway = new TableGateway($table, $adapter);
 
         $connection->beginTransaction();
 
         try {
 
             foreach ($data as $row) {
-                $row = (array) $row;
                 $tableGateway->insert($row);
             }
 

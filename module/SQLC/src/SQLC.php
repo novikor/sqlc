@@ -32,6 +32,9 @@ class SQLC
      */
     protected $mysqlAdapter;
 
+    /** @var \Zend\Db\Adapter\Adapter[] */
+    protected $adapters;
+
     /**
      * SQLC constructor.
      */
@@ -40,6 +43,12 @@ class SQLC
         try {
             $this->mysqlAdapter = self::getServiceLocator()->get('mysql');
             $this->oracleAdapter = self::getServiceLocator()->get('oracle');
+
+            $this->adapters = [
+                'MySQL'           => $this->mysqlAdapter,
+                'Oracle Database' => $this->oracleAdapter,
+            ];
+
         } catch (NotFoundExceptionInterface $e) {
             echo $e;
         } catch (ContainerExceptionInterface $e) {
@@ -86,5 +95,13 @@ class SQLC
     public function oracle()
     {
         return $this->oracleAdapter;
+    }
+
+    /**
+     * @return array|\Zend\Db\Adapter\Adapter[]
+     */
+    public function adapters()
+    {
+        return $this->adapters;
     }
 }

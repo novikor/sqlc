@@ -20,15 +20,13 @@ use Zend\View\Model\ViewModel;
  */
 class IndexController extends AbstractActionController
 {
+    /**
+     * @return \Zend\View\Model\ViewModel
+     */
     public function indexAction()
     {
-        $adapters = [
-            'MySQL'           => SQLC::get()->mySql(),
-            'Oracle Database' => SQLC::get()->oracle(),
-        ];
-
         return new ViewModel([
-            'adapters' => $adapters,
+            'adapters' => SQLC::get()->adapters(),
         ]);
     }
 
@@ -66,6 +64,9 @@ class IndexController extends AbstractActionController
         $this->redirect()->toRoute('home');
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
     public function cleanTableAction()
     {
         $post = $this->params()->fromPost();
@@ -75,6 +76,11 @@ class IndexController extends AbstractActionController
             if (!is_string($table)) {
                 throw new \Exception('Invalid table name received');
             }
+
+            /** @var \SQLC\Model\Table $tableModel */
+            $tableModel = SQLC::getServiceLocator()->build(\SQLC\Model\Table::class);
+
+            $tableModel->clearTable($table);
 
             $this->flashMessenger()->addSuccessMessage(sprintf(
                 'Successfully cleaned %s (Data & Sequence)',
