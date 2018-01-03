@@ -1,15 +1,3 @@
--- CREATE OR REPLACE FUNCTION getTableSize(tableName VARCHAR)
---   RETURN INTEGER
--- IS kb_size INTEGER;
---   BEGIN
---     SELECT round((num_rows * avg_row_len) / (1024)) AS KB
---     INTO kb_size
---     FROM all_tables
---     WHERE owner = USER
---           AND TABLE_NAME LIKE UPPER(tableName);
---     RETURN kb_size;
---   END;
-
 CREATE OR REPLACE FUNCTION getTableSize(tableName VARCHAR)
   RETURN INTEGER
 IS kb_size INTEGER;
@@ -28,3 +16,53 @@ IS kb_size INTEGER;
 
 -- SELECT *
 -- FROM user_tables
+
+
+CREATE OR REPLACE FUNCTION getQueryExecutionTime(sqlQuery VARCHAR)
+  RETURN NUMBER
+IS
+  TYPE EmpCurTyp  IS REF CURSOR;
+  t NUMBER;
+  plsql_block VARCHAR (255);
+  cusror EmpCurTyp;
+  BEGIN
+    plsql_block :=
+    'SELECT
+      ROUND(ELAPSED_TIME / 1000, 3) AS Time
+    FROM v$sqlarea
+    WHERE SQL_TEXT = :sqlQuery';
+
+      -- Open cursor & specify bind variable in USING clause:
+    OPEN cusror FOR plsql_block USING sqlQuery;
+
+    -- Fetch rows from result set one at a time:
+    LOOP
+      FETCH cusror INTO t;
+      EXIT;
+    END LOOP;
+
+    CLOSE cusror;
+
+    RETURN t;
+  END;
+--
+-- SELECT getQueryExecutionTime('SELECT COUNT(*) FROm TEXT WHERE  REGEXP_LIKE (TEXT, ''ipsum'')') from dual;
+
+CREATE OR REPLACE FUNCTION execAndGetQueryExecTime(sqlQuery VARCHAR)
+  RETURN NUMBER
+IS
+  TYPE EmpCurTyp  IS REF CURSOR;
+  t_before NUMBER;
+  t_after NUMBER;
+  cusror EmpCurTyp;
+  BEGIN
+    t_before := NVL(GETQUERYEXECUTIONTIME(sqlQuery), 0);
+
+    EXECUTE IMMEDIATE sqlQuery;
+
+    t_after := GETQUERYEXECUTIONTIME(sqlQuery);
+
+    RETURN t_after - t_before;
+  END;
+
+-- SELECT execAndGetQueryExecTime('SELECT 23 FROM DUAL') from dual;
