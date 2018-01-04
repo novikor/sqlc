@@ -45,8 +45,8 @@ class SQLC
             $this->oracleAdapter = self::getServiceLocator()->get('oracle');
 
             $this->adapters = [
-                'MySQL'           => $this->mysqlAdapter,
-                'Oracle Database' => $this->oracleAdapter,
+                'MySQL'     => $this->mysqlAdapter,
+                'Oracle XE' => $this->oracleAdapter,
             ];
 
         } catch (NotFoundExceptionInterface $e) {

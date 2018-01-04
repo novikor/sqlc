@@ -7,9 +7,9 @@ use Zend\Stdlib\ArrayUtils;
  * This makes our life easier when dealing with paths. Everything is relative
  * to the application root now.
  */
-ini_set('session.name', 'sqlc');
+chdir(dirname(__DIR__) . '/../../');
 
-chdir(dirname(__DIR__));
+define('BP', getcwd());
 
 // Decline static file requests back to the PHP built-in webserver
 if (php_sapi_name() === 'cli-server') {
@@ -21,7 +21,7 @@ if (php_sapi_name() === 'cli-server') {
 }
 
 // Composer autoloading
-include __DIR__ . '/../vendor/autoload.php';
+require BP . '/vendor/autoload.php';
 
 if (! class_exists(Application::class)) {
     throw new RuntimeException(
@@ -33,10 +33,10 @@ if (! class_exists(Application::class)) {
 }
 
 // Retrieve configuration
-$appConfig = require __DIR__ . '/../config/application.config.php';
-if (file_exists(__DIR__ . '/../config/development.config.php')) {
-    $appConfig = ArrayUtils::merge($appConfig, require __DIR__ . '/../config/development.config.php');
+$appConfig = require BP . '/config/application.config.php';
+if (file_exists(BP . '/config/development.config.php')) {
+    $appConfig = ArrayUtils::merge($appConfig, require BP . '/config/development.config.php');
 }
 
 // Run the application!
-Application::init($appConfig)->run();
+Application::init($appConfig);
