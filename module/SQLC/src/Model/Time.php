@@ -11,10 +11,10 @@ use Zend\Db\Adapter\Adapter;
  */
 abstract class Time
 {
-    CONST TYPE_CREATE = 'C';
-    CONST TYPE_READ = 'R';
-    CONST TYPE_UPDATE = 'U';
-    CONST TYPE_DELETE = 'D';
+    CONST TYPE_CREATE = 'CREATE';
+    CONST TYPE_READ = 'SELECT';
+    CONST TYPE_UPDATE = 'UPDATE';
+    CONST TYPE_DELETE = 'DELETE';
 
     /** @var Adapter */
     protected $adapter;
@@ -28,10 +28,8 @@ abstract class Time
         //TODO
         $crudType = $this->getQueryCRUDType($sqlQuery);
 
-        $resource = null;
-
         if ($crudType) {
-            $time = $this->execAndGetExecutionTime($sqlQuery, $resource);
+            $time = $this->execAndGetExecutionTime($sqlQuery);
 
 //            $this->sqlLiteModel->saveTime(
 //                $this->adapter->getPlatform()->getName(),
@@ -44,11 +42,10 @@ abstract class Time
 
     /**
      * @param string $sqlQuery
-     * @param $resource
      *
      * @return float
      */
-    public abstract function execAndGetExecutionTime(string $sqlQuery, &$resource);
+    public abstract function execAndGetExecutionTime(string $sqlQuery);
 
     /**
      * @param string $sqlQuery
@@ -57,7 +54,19 @@ abstract class Time
      */
     protected function getQueryCRUDType(string $sqlQuery)
     {
-        //TODO
-        return false;
+        $firstWord = strtoupper(trim(strtok($sqlQuery, ' ')));
+
+        $crudTypes = [
+            static::TYPE_CREATE,
+            static::TYPE_READ,
+            static::TYPE_UPDATE,
+            static::TYPE_DELETE,
+        ];
+
+        if (in_array($firstWord, $crudTypes)) {
+            return $firstWord;
+        } else {
+            return false;
+        }
     }
 }

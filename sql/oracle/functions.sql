@@ -48,7 +48,7 @@ IS
 --
 -- SELECT getQueryExecutionTime('SELECT COUNT(*) FROm TEXT WHERE  REGEXP_LIKE (TEXT, ''ipsum'')') from dual;
 
-CREATE OR REPLACE FUNCTION execAndGetQueryExecTime(sqlQuery VARCHAR)
+CREATE OR REPLACE FUNCTION execAndGetTime(sqlQuery VARCHAR)
   RETURN NUMBER
 IS
   TYPE EmpCurTyp  IS REF CURSOR;
@@ -65,4 +65,4 @@ IS
     RETURN t_after - t_before;
   END;
 
--- SELECT execAndGetQueryExecTime('SELECT 23 FROM DUAL') from dual;
+-- SELECT execAndGetTime('SELECT COUNT(*) FROM TEXT WHERE TEXT LIKE ''%sum%'' ') from dual;

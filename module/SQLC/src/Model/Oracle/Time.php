@@ -2,10 +2,29 @@
 
 namespace SQLC\Model\Oracle;
 
+use SQLC\SQLC;
+
 class Time extends \SQLC\Model\Time
 {
-    public function execAndGetExecutionTime(string $sqlQuery, &$resource)
+    public function __construct()
     {
-        // TODO: Implement execAndGetExecutionTime() method.
+        $this->adapter = SQLC::get()->oracle();
+    }
+
+    /**
+     * @param string $sqlQuery
+     *
+     * @return float
+     */
+    public function execAndGetExecutionTime(string $sqlQuery)
+    {
+        $result = $this->adapter->query(
+            'SELECT execAndGetTime(:sqlQuery) AS TIME FROM dual',
+            ['sqlQuery' => $sqlQuery]
+        );
+
+        $time = (float)$result->current()['TIME'];
+
+        return $time;
     }
 }
