@@ -20,7 +20,7 @@ class Core {
 	private static $dbTablePrefix = "gd_";
 	private static $encryptionSalt;
 	private static $errorReporting = 1;
-	private static $maxGeneratedRows = 100000;
+	private static $maxGeneratedRows = 500000;
 	private static $defaultNumRows = 100;
 	private static $maxDemoModeRows = 100;
     private static $maxDataSetHistorySize = 200;

@@ -146,8 +146,8 @@ $(document).ready(function(){
     },
     {
         keydown: function(e, term){
-            if (e.which == 67 && e.ctrlKey){
-                term.error('CTRL + C was pressed.');
+            if (e.which == 90 && e.ctrlKey){
+                term.error('CTRL + Z was pressed.');
                 PAGE_REST = false;
                 term.set_prompt(PROMPT);
                 prev_command = '';
