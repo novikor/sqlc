@@ -29,7 +29,7 @@ class Time extends \SQLC\Model\Time
         $this->adapter->query('SET PROFILING  = 1;', Adapter::QUERY_MODE_EXECUTE);
         $this->adapter->query($sqlQuery, Adapter::QUERY_MODE_EXECUTE);
         $time = $this->adapter->query(/** @lang MySQL */
-            'SELECT ROUND(SUM(DURATION), 3) AS DURATION
+            'SELECT ROUND(SUM(DURATION), 6) AS DURATION
                     FROM INFORMATION_SCHEMA.PROFILING
                     WHERE QUERY_ID = 1;', Adapter::QUERY_MODE_EXECUTE)
             ->toArray()[0]['DURATION'];

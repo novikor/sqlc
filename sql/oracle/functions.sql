@@ -28,7 +28,7 @@ IS
   BEGIN
     plsql_block :=
     'SELECT
-      ROUND(ELAPSED_TIME / 1000, 3) AS Time
+      ROUND(ELAPSED_TIME / 1000000, 6) AS Time
     FROM v$sqlarea
     WHERE SQL_TEXT = :sqlQuery';
 
