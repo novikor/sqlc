@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $selectAvgTime
+ * @var array $insertAvgTime
+ * @var array $updateAvgTime
+ * @var array $deleteAvgTime
+ */
+?>
 <div id="generalChart"></div>
 <script>
     google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -6,10 +14,10 @@
     function drawTitleSubtitle() {
         var data = google.visualization.arrayToDataTable([
             ['Operation', 'MySQL', 'Oracle XE'],
-            ['Select', 0.05, 0.02],
-            ['Insert', 0.6, 0.01],
-            ['Update', 0.03, 0.02],
-            ['Delete', 0.5, 0.5]
+            ['Select', <?=$selectAvgTime['MySQL'] ?? 0 ?>, <?= $selectAvgTime['Oracle'] ?? 0 ?>],
+            ['Insert', <?=$insertAvgTime['MySQL'] ?? 0 ?>, <?= $insertAvgTime['Oracle'] ?? 0 ?>],
+            ['Update', <?=$updateAvgTime['MySQL'] ?? 0 ?>, <?= $updateAvgTime['Oracle'] ?? 0 ?>],
+            ['Delete', <?=$deleteAvgTime['MySQL'] ?? 0 ?>, <?= $deleteAvgTime['Oracle'] ?? 0 ?>]
         ]);
 
         var materialOptions = {
@@ -19,7 +27,8 @@
             },
             hAxis: {
                 title: 'Seconds',
-                minValue: 0
+                minValue: 0,
+                format:'#.######'
             },
             vAxis: {
                 title: 'Operation type'
@@ -27,6 +36,6 @@
             bars: 'horizontal'
         };
         var materialChart = new google.charts.Bar(document.getElementById('generalChart'));
-        materialChart.draw(data, materialOptions);
+        materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
     }
 </script>

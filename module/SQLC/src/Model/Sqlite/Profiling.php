@@ -3,10 +3,14 @@
 namespace SQLC\Model\Sqlite;
 
 use SQLC\SQLC;
+use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
 
 class Profiling
 {
+    const DBMS_ORACLE = 'Oracle';
+    const DBMS_MYSQL = 'MySQL';
+
     /**
      * @var \Zend\Db\Adapter\Adapter
      */
@@ -47,6 +51,29 @@ class Profiling
             'sql'       => $sql,
             'microtime' => microtime(true),
         ]);
+    }
+
+    public function getAvgTime(): array
+    {
+
+        $avgTime = [];
+        $query = $this->adapter->query("
+        SELECT
+          dbms,
+          crud_type,
+          ROUND(AVG(time), 6) AS time
+        FROM profiling
+        GROUP BY dbms, crud_type
+        ", Adapter::QUERY_MODE_EXECUTE
+        )->toArray();
+
+        foreach ($query as $row) {
+            $avgTime[$row['crud_type']][$row['dbms']] = $row['time'];
+        }
+
+        $avgTime += array_values($avgTime);
+
+        return $avgTime;
     }
 
 }

@@ -12,7 +12,7 @@ use Zend\Db\Adapter\Adapter;
  */
 abstract class Time
 {
-    CONST TYPE_CREATE = 'CREATE';
+    CONST TYPE_CREATE = 'INSERT';
     CONST TYPE_READ = 'SELECT';
     CONST TYPE_UPDATE = 'UPDATE';
     CONST TYPE_DELETE = 'DELETE';

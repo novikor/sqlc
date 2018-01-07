@@ -30,22 +30,35 @@ class ProfilingController extends AbstractActionController
     protected $sqlLiteModel;
 
     /**
+     * ProfilingController constructor.
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function __construct()
+    {
+        $this->adapter = SQLC::get()->sqlite();
+        $this->sqlLiteModel = SQLC::getServiceLocator()->build(\SQLC\Model\Sqlite\Profiling::class);
+    }
+
+    /**
      * @return \Zend\View\Model\ViewModel
      */
     public function indexAction()
     {
         $this->layout('layout/profiling');
 
+        $avgTime = $this->sqlLiteModel->getAvgTime();
+
+        list($selectAvgTime, $insertAvgTime, $updateAvgTime, $deleteAvgTime) = $avgTime;
+
+
         return new ViewModel([
-            'adapters' => SQLC::get()->adapters(),
+            'adapters'      => SQLC::get()->adapters(),
+            'selectAvgTime' => $selectAvgTime,
+            'insertAvgTime' => $insertAvgTime,
+            'updateAvgTime' => $updateAvgTime,
+            'deleteAvgTime' => $deleteAvgTime,
         ]);
-
-    }
-
-    public function __construct()
-    {
-        $this->adapter = SQLC::get()->sqlite();
-        $this->sqlLiteModel = SQLC::getServiceLocator()->build(\SQLC\Model\Sqlite\Profiling::class);
     }
 
 }
