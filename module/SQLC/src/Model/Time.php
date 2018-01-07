@@ -2,6 +2,7 @@
 
 namespace SQLC\Model;
 
+use SQLC\SQLC;
 use Zend\Db\Adapter\Adapter;
 
 /**
@@ -18,6 +19,7 @@ abstract class Time
 
     /** @var Adapter */
     protected $adapter;
+    /** @var Sqlite\Profiling */
     protected $sqlLiteModel;
 
     /**
@@ -25,20 +27,31 @@ abstract class Time
      */
     public function profileQuery(string $sqlQuery)
     {
-        //TODO
         $crudType = $this->getQueryCRUDType($sqlQuery);
 
         if ($crudType) {
             $time = $this->execAndGetExecutionTime($sqlQuery);
 
-//            $this->sqlLiteModel->saveTime(
-//                $this->adapter->getPlatform()->getName(),
-//                $crudType,
-//                $time,
-//                $sqlQuery
-//            );
+            $this->sqlLiteModel->saveTime(
+                $this->adapter->getPlatform()->getName(),
+                $crudType,
+                $time,
+                $sqlQuery
+            );
         }
     }
+
+    /**
+     * Time constructor.
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function __construct()
+    {
+        $this->sqlLiteModel = SQLC::getServiceLocator()
+            ->build(\SQLC\Model\Sqlite\Profiling::class);
+    }
+
 
     /**
      * @param string $sqlQuery

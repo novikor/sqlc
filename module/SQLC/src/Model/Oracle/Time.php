@@ -6,8 +6,15 @@ use SQLC\SQLC;
 
 class Time extends \SQLC\Model\Time
 {
+    /**
+     * Time constructor.
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
     public function __construct()
     {
+        parent::__construct();
+
         $this->adapter = SQLC::get()->oracle();
     }
 

@@ -10,6 +10,7 @@ return [
     Model\Table::class                    => InvokableFactory::class,
     GenerateData\Model\Api::class         => InvokableFactory::class,
     GenerateData\Model\MultiImport::class => InvokableFactory::class,
+    Model\Sqlite\Profiling::class         => InvokableFactory::class,
     Model\Mysql\Time::class               => InvokableFactory::class,
     Model\Oracle\Time::class              => InvokableFactory::class,
     \SQLC\Model\Time::class               => function (ServiceManager $sm, $className, array $options) {
