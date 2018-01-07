@@ -55,10 +55,12 @@ IS
   t_before NUMBER;
   t_after NUMBER;
   cusror EmpCurTyp;
+  PRAGMA AUTONOMOUS_TRANSACTION;
   BEGIN
     t_before := NVL(GETQUERYEXECUTIONTIME(sqlQuery), 0);
 
     EXECUTE IMMEDIATE sqlQuery;
+    COMMIT;
 
     t_after := GETQUERYEXECUTIONTIME(sqlQuery);
 
