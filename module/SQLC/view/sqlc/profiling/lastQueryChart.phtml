@@ -1,0 +1,23 @@
+<h3>
+    Last query executed in the terminal profiling
+</h3>
+<div id="last-chart"></div>
+<script>
+    c3.generate({
+        bindto: '#last-chart',
+        data: {
+            columns: [
+                ['MySQL', 0.003],
+                ['Oracle XE', 0.011]
+            ],
+            type: 'bar'
+        },
+        bar: {
+            width: {
+                ratio: 0.45 // this makes bar width 50% of length between ticks
+            }
+            // or
+            //width: 100 // this makes bar width 100px
+        }
+    });
+</script>

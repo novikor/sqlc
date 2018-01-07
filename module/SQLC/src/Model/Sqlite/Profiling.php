@@ -43,8 +43,9 @@ class Profiling
         $this->tableGateway->insert([
             'dbms'      => $dbms,
             'crud_type' => $crud_type,
-            'time'       => $time,
+            'time'      => $time,
             'sql'       => $sql,
+            'microtime' => microtime(true),
         ]);
     }
 

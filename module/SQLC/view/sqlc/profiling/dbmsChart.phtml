@@ -1,0 +1,32 @@
+<div id="generalChart"></div>
+<script>
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawTitleSubtitle);
+
+    function drawTitleSubtitle() {
+        var data = google.visualization.arrayToDataTable([
+            ['Operation', 'MySQL', 'Oracle XE'],
+            ['Select', 0.05, 0.02],
+            ['Insert', 0.6, 0.01],
+            ['Update', 0.03, 0.02],
+            ['Delete', 0.5, 0.5]
+        ]);
+
+        var materialOptions = {
+            chart: {
+                title: 'MySQL and Oracle XE: General performance',
+                subtitle: 'Based on average queries execution time'
+            },
+            hAxis: {
+                title: 'Seconds',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Operation type'
+            },
+            bars: 'horizontal'
+        };
+        var materialChart = new google.charts.Bar(document.getElementById('generalChart'));
+        materialChart.draw(data, materialOptions);
+    }
+</script>

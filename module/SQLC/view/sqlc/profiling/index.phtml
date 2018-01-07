@@ -1,0 +1,31 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \Zend\Db\Adapter\Adapter[]      $adapters
+ */
+?>
+
+<?= $this->partial('sqlc/profiling/dmbsChart'); ?>
+<?= $this->partial('sqlc/profiling/lastQueryChart'); ?>
+<h3>Profiled queries list</h3>
+<div class="container-fluid">
+    <?php foreach ($adapters as $databaseName => $adapter): ?>
+        <?php
+        $platform = $adapter->getPlatform()->getName();
+        ?>
+        <div class="col-lg-6">
+            <table class="table table-condensed table-hover">
+                <caption class="well well-sm">
+                    <strong><?= $platform ?></strong>
+                </caption>
+                <thead class="thead-dark">
+                <th>Operation type</th>
+                <th>Execution time</th>
+                <th>SQL</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    <?php endforeach; ?>
+</div>

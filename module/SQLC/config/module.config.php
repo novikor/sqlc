@@ -75,11 +75,22 @@ return [
                     ],
                 ],
             ],
+            'profiling' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/profiling[/]',
+                    'defaults' => [
+                        'controller' => Controller\ProfilingController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers'        => [
         'factories'  => [
             Controller\IndexController::class => InvokableFactory::class,
+            Controller\ProfilingController::class => InvokableFactory::class,
         ],
         'invokables' => [
             'SQLC/Controller/SQLC' => Controller\IndexController::class,
@@ -91,19 +102,23 @@ return [
             'helper' => View\Helper\Data::class,
         ],
     ],
-    'view_manager'       => [
+    'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
-        'template_map'             => [
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-            'sqlc/index/index'        => __DIR__ . '/../view/sqlc/index/index.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
-            'sqlc/index/tableColumns' => __DIR__ . '/../view/sqlc/index/tableColumns.phtml',
-            'sqlc/index/tableData'    => __DIR__ . '/../view/sqlc/index/tableData.phtml',
+        'template_map' => [
+            'layout/layout'                 => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/profiling'              => __DIR__ . '/../view/layout/profiling/layout.phtml',
+            'sqlc/index/index'              => __DIR__ . '/../view/sqlc/index/index.phtml',
+            'error/404'                     => __DIR__ . '/../view/error/404.phtml',
+            'error/index'                   => __DIR__ . '/../view/error/index.phtml',
+            'sqlc/index/tableColumns'       => __DIR__ . '/../view/sqlc/index/tableColumns.phtml',
+            'sqlc/index/tableData'          => __DIR__ . '/../view/sqlc/index/tableData.phtml',
+            'sqlc/profiling/index'          => __DIR__ . '/../view/sqlc/profiling/index.phtml',
+            'sqlc/profiling/dmbsChart'      => __DIR__ . '/../view/sqlc/profiling/dbmsChart.phtml',
+            'sqlc/profiling/lastQueryChart' => __DIR__ . '/../view/sqlc/profiling/lastQueryChart.phtml',
         ],
         'template_path_stack'      => [
             __DIR__ . '/../view',
