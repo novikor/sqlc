@@ -31,12 +31,15 @@ if (!$lastQueryTime) {
     </table>
 </div>
 <script>
-    c3.generate({
+    var chart = c3.generate({
         bindto: '#last-chart',
+        transition: {
+            duration: 3700
+        },
         data: {
             columns: [
-                ['MySQL', <?= $lastQueryTime['MySQL']['time'] ?>],
-                ['Oracle XE', <?= $lastQueryTime['Oracle']['time'] ?>]
+                ['MySQL', 0],
+                ['Oracle XE', 0]
             ],
             type: 'bar'
         },
@@ -48,4 +51,13 @@ if (!$lastQueryTime) {
             //width: 100 // this makes bar width 100px
         }
     });
+    setTimeout(function () {
+        chart.load({
+            columns: [
+                ['MySQL', <?= $lastQueryTime['MySQL']['time'] ?>],
+                ['Oracle XE', <?= $lastQueryTime['Oracle']['time'] ?>]
+            ]
+        });
+    }, 0);
+
 </script>
