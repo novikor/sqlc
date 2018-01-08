@@ -48,6 +48,7 @@ class ProfilingController extends AbstractActionController
         $this->layout('layout/profiling');
 
         $avgTime = $this->sqlLiteModel->getAvgTime();
+        $lastQueryTime = $this->sqlLiteModel->getLastQueryTime();
 
         list($selectAvgTime, $insertAvgTime, $updateAvgTime, $deleteAvgTime) = $avgTime;
 
@@ -58,6 +59,7 @@ class ProfilingController extends AbstractActionController
             'insertAvgTime' => $insertAvgTime,
             'updateAvgTime' => $updateAvgTime,
             'deleteAvgTime' => $deleteAvgTime,
+            'lastQueryTime' => $lastQueryTime,
         ]);
     }
 

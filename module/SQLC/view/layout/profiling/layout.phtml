@@ -17,15 +17,19 @@
             ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
             ->prependStylesheet($this->basePath('css/c3.min.css'))
             ->prependStylesheet($this->basePath('css/profiling.css'))
+            ->prependStylesheet($this->basePath('css/highlightjs/idea.css'))
+            ->prependStylesheet($this->basePath('css/highlightjs/default.css'))
         ?>
 
         <!-- Scripts -->
         <?= $this->headScript()
+            ->prependFile($this->basePath('js/profiling.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
             ->prependFile($this->basePath('js/google/loader.js'))
             ->prependFile($this->basePath('js/c3.min.js'))
             ->prependFile($this->basePath('js/d3.min.js'))
+            ->prependFile($this->basePath('js/highlightjs/highlight.pack.js'))
         ?>
 
     </head>

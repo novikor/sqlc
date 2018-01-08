@@ -76,4 +76,28 @@ class Profiling
         return $avgTime;
     }
 
+    /**
+     * @return array
+     */
+    public function getLastQueryTime():array
+    {
+        $sql = $this->tableGateway->getSql();
+        $select = $sql
+            ->select()
+            ->columns(['dbms', 'time', 'sql'])
+            ->group('dbms')
+            ->order(['microtime' => 'desc'])
+            ->limit(2);
+
+        $preparedStatement = $sql->prepareStatementForSqlObject($select);
+
+        $fetchResult = $preparedStatement->execute();
+        $result = [];
+        foreach ($fetchResult as $row){
+            $result[$row['dbms']] = ['time' => $row['time'], 'sql' => $row['sql']];
+        }
+
+        return $result;
+    }
+
 }
