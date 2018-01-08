@@ -100,4 +100,21 @@ class Profiling
         return $result;
     }
 
+    /**
+     * @param string $dbms
+     * @param int    $limit
+     *
+     * @return \Zend\Db\Adapter\Driver\Pdo\Result
+     */
+    public function getQueries(string $dbms, int $limit = 50):\Zend\Db\Adapter\Driver\ResultInterface
+    {
+         $sql = $this->tableGateway->getSql();
+         $select = $sql
+             ->select()
+             ->where(['dbms' => $dbms])
+             ->order(['microtime' => 'desc'])
+             ->limit($limit);
+
+         return $sql->prepareStatementForSqlObject($select)->execute();
+    }
 }
