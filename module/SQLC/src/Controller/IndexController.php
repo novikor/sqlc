@@ -43,7 +43,8 @@ class IndexController extends AbstractActionController
             if (!$table || !$rowsCount || $rowsCount <= 0) {
                 throw new \Exception('Invalid table or rowsCount received');
             }
-
+            /** 5 minutes */
+            ini_set('max_execution_time', 300);
             /** @var \SQLC\GenerateData\Model\Api $api */
             $api = SQLC::getServiceLocator()->build(\SQLC\GenerateData\Model\Api::class);
             $data = $api->requestData($table, $rowsCount);

@@ -1,0 +1,43 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer     $this
+ * @var \Zend\Db\Adapter\Adapter[]          $adapters
+ * @var Zend\Db\Adapter\Driver\Pdo\Result[] $queries
+ */
+?>
+<?= $this->helper()->renderMessages(); ?>
+<?= $this->partial('sqlc/profiling/dmbsChart'); ?>
+<?= $this->partial('sqlc/profiling/lastQueryChart'); ?>
+<h3>Profiled queries list</h3>
+<div class="container-fluid">
+    <?php foreach ($adapters as $databaseName => $adapter): ?>
+        <?php
+        $platform = $adapter->getPlatform()->getName();
+        ?>
+        <div class="col-lg-6">
+            <table class="table table-condensed table-hover">
+                <caption class="well well-sm">
+                    <strong><?= $platform ?></strong>
+                    <span>(<?= $queries[$platform]->count() ?> total)</span>
+                </caption>
+                <thead class="thead-dark">
+                <th>Operation</th>
+                <th>Execution time (ms)</th>
+                <th>SQL</th>
+                </thead>
+                <tbody>
+                <?php foreach ($queries[$platform] as $query): ?>
+                    <tr>
+                        <td><?= $query['crud_type'] ?></td>
+                        <td><?= $query['time'] ?></td>
+                        <td><code class="sql"><?= $query['sql'] ?></code></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endforeach; ?>
+    <div class="col-lg-12">
+        <a class="btn-block btn btn-danger" id="reset-button" href="<?= $this->url('profiling/reset') ?>">Reset profiling data</a>
+    </div>
+</div>

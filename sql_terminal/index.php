@@ -40,7 +40,7 @@
                 vertical-align: top;
             }
             .left-col pre, .right-col pre{
-                margin: 0;                
+                margin: 0;
             }
             .no-border{
                 border-top: 0;
@@ -49,17 +49,12 @@
     </head>
     <body>
     <?php
-    $predefined = $_GET['predefined'] ?? false;
-    if($predefined):
+    $predefined = $_GET['predefined'] ?? '';
     ?>
         <h1>
-            <?php if($predefined == 'mysql'): ?>
-            <a href="http://sqlc.local/terminal/?predefined=oracle">Switch to Oracle</a>
-            <?php elseif ($predefined == 'oracle'):?>
-            <a href="http://sqlc.local/terminal/?predefined=mysql">Switch to MySQL</a>
-            <?php endif; ?>
+            <a href="http://sqlc.local/terminal/?predefined=oracle" style="<?= $predefined == 'oracle' ? 'display:none' : ''?>">> Switch to Oracle</a>
+            <a href="http://sqlc.local/terminal/?predefined=mysql" style="<?= $predefined == 'mysql' ? 'display:none' : ''?>">> Switch to MySQL</a>
         </h1>
-    <?php endif; ?>
         <div id="full-data"></div>
         <div id="terminal"></div>
     </body>

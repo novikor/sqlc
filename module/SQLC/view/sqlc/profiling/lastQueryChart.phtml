@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var array $lastQueryTime
+ */
+if (!$lastQueryTime) {
+    return;
+}
+?>
+<h3>
+    Last query executed in the terminal profiling
+</h3>
+<div id="last-chart"></div>
+<div id="lastQuerySql">
+    <table class="table table-condensed table-hover">
+        <caption>
+            <strong>Compared queries SQL</strong>
+        </caption>
+        <thead class="thead-dark">
+        <th>DBMS</th>
+        <th>SQL</th>
+        </thead>
+        <tbody>
+        <?php foreach ($lastQueryTime as $dbms => $time): ?>
+            <tr>
+                <td><?= $dbms ?></td>
+                <td><code class="sql"><?= $time['sql'] ?></code></td>
+            </tr>
+        <?php endforeach; ?>
+
+        </tbody>
+    </table>
+</div>
+<script>
+    var chart = c3.generate({
+        bindto: '#last-chart',
+        transition: {
+            duration: 3700
+        },
+        data: {
+            columns: [
+                ['MySQL', 0],
+                ['Oracle XE', 0]
+            ],
+            type: 'bar'
+        },
+        bar: {
+            width: {
+                ratio: 0.45 // this makes bar width 50% of length between ticks
+            }
+            // or
+            //width: 100 // this makes bar width 100px
+        }
+    });
+    setTimeout(function () {
+        chart.load({
+            columns: [
+                ['MySQL', <?= $lastQueryTime['MySQL']['time'] ?>],
+                ['Oracle XE', <?= $lastQueryTime['Oracle']['time'] ?>]
+            ]
+        });
+    }, 0);
+
+</script>

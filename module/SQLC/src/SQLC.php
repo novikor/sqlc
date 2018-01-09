@@ -15,6 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SQLC
 {
+    const SQLITE_INSTALL_SCRIPT = BP . '/sql/sqlite/install.sql';
     /**
      * @var ServiceLocatorInterface
      */
@@ -34,6 +35,10 @@ class SQLC
 
     /** @var \Zend\Db\Adapter\Adapter[] */
     protected $adapters;
+    /**
+     * @var \Zend\Db\Adapter\Adapter
+     */
+    protected $sqliteAdapter;
 
     /**
      * SQLC constructor.
@@ -43,10 +48,12 @@ class SQLC
         try {
             $this->mysqlAdapter = self::getServiceLocator()->get('mysql');
             $this->oracleAdapter = self::getServiceLocator()->get('oracle');
+            $this->sqliteAdapter = self::getServiceLocator()->get('sqlite');
+            $this->installSqliteDatabase();
 
             $this->adapters = [
-                'MySQL'           => $this->mysqlAdapter,
-                'Oracle Database' => $this->oracleAdapter,
+                'MySQL'     => $this->mysqlAdapter,
+                'Oracle XE' => $this->oracleAdapter,
             ];
 
         } catch (NotFoundExceptionInterface $e) {
@@ -65,12 +72,23 @@ class SQLC
     }
 
     /**
-     * @param MvcEvent $mvcEvent
+     * @throws \Exception
      */
-    public static function init(MvcEvent $mvcEvent)
+    protected function installSqliteDatabase()
     {
-        static::$serviceLocator = $mvcEvent->getApplication()->getServiceManager();
-        self::$instance = new self();
+        $installSql = file_get_contents(static::SQLITE_INSTALL_SCRIPT);
+        if (!$installSql) {
+            throw new \Exception('Can`t read file: ' . static::SQLITE_INSTALL_SCRIPT);
+        }
+        $pdo = $this->sqliteAdapter->getDriver()->getConnection()->getResource();
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE,
+            \PDO::ERRMODE_EXCEPTION);
+        $pdo->exec($installSql);
+    }
+
+    public function sqlite()
+    {
+        return $this->sqliteAdapter;
     }
 
     /**
@@ -79,6 +97,15 @@ class SQLC
     public static function get()
     {
         return self::$instance;
+    }
+
+    /**
+     * @param MvcEvent $mvcEvent
+     */
+    public static function init(MvcEvent $mvcEvent)
+    {
+        static::$serviceLocator = $mvcEvent->getApplication()->getServiceManager();
+        self::$instance = new self();
     }
 
     /**

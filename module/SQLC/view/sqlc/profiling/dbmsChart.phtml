@@ -1,0 +1,41 @@
+<?php
+/**
+ * @var array $selectAvgTime
+ * @var array $insertAvgTime
+ * @var array $updateAvgTime
+ * @var array $deleteAvgTime
+ */
+?>
+<div id="generalChart"></div>
+<script>
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawTitleSubtitle);
+
+    function drawTitleSubtitle() {
+        var data = google.visualization.arrayToDataTable([
+            ['Operation', 'MySQL', 'Oracle XE'],
+            ['Select', <?=$selectAvgTime['MySQL'] ?? 0 ?>, <?= $selectAvgTime['Oracle'] ?? 0 ?>],
+            ['Insert', <?=$insertAvgTime['MySQL'] ?? 0 ?>, <?= $insertAvgTime['Oracle'] ?? 0 ?>],
+            ['Update', <?=$updateAvgTime['MySQL'] ?? 0 ?>, <?= $updateAvgTime['Oracle'] ?? 0 ?>],
+            ['Delete', <?=$deleteAvgTime['MySQL'] ?? 0 ?>, <?= $deleteAvgTime['Oracle'] ?? 0 ?>]
+        ]);
+
+        var materialOptions = {
+            chart: {
+                title: 'MySQL and Oracle XE: General performance',
+                subtitle: 'Based on average queries execution time'
+            },
+            hAxis: {
+                title: 'Seconds',
+                minValue: 0,
+                format:'#.######'
+            },
+            vAxis: {
+                title: 'Operation type'
+            },
+            bars: 'horizontal'
+        };
+        var materialChart = new google.charts.Bar(document.getElementById('generalChart'));
+        materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
+    }
+</script>

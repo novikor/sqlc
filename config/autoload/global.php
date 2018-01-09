@@ -30,6 +30,10 @@ return [
                 'connection_string' => 'localhost/XE',
                 'character_set'     => 'AL32UTF8',
             ],
+            'sqlite' => [
+                'driver'            => 'Pdo',
+                'dsn' => 'sqlite:'. BP . '/sql/sqlite/sqlc.db',
+            ],
         ],
     ],
     'service_manager' => [

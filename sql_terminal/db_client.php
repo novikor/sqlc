@@ -137,6 +137,9 @@ abstract class DbClient{
         foreach ($rows as $i => $row)
         {
             foreach ($row as $key => $value){
+                if(is_object($value)){
+                    $value = $value->read($value->size());
+                }
                 $encoding = mb_detect_encoding($value, 'auto');
                 //convert to unicode
                 if ($encoding != 'UTF-8') {
@@ -223,6 +226,9 @@ abstract class DbClient{
         $start = microtime(true);
         $query = $this->do_driver_query($command); 
         $end = microtime(true);
+
+        $this->profileQuery($command);
+
         $this->time = $end - $start;
         $this->info = $this->getQueryInfo();
         $result = array('info' => array(), 'table' => array());
@@ -244,6 +250,15 @@ abstract class DbClient{
         $this->user = $preCon->user ?? $this->user;
         $this->server = $preCon->host ?? $this->server;
         $this->port = $preCon->port ?? $this->port;
+    }
+
+    protected function profileQuery($sql)
+    {
+        /** @var SQLC\Model\Time|false  $timeModel */
+        $timeModel= \SQLC\SQLC::getServiceLocator()->build(\SQLC\Model\Time::class, ['type'=> get_class($this)]);
+        if($timeModel){
+            $timeModel->profileQuery($sql);
+        }
     }
 }
 
