@@ -47,7 +47,7 @@ class ProfilingController extends AbstractActionController
     {
         $this->layout('layout/profiling');
 
-        $avgTime = $this->sqlLiteModel->getAvgTime();
+        $avgTime = $this->sqlLiteModel->getAvgTime() ?: [null, null, null, null];
         $lastQueryTime = $this->sqlLiteModel->getLastQueryTime();
         $queries = [
             'MySQL'  => $this->sqlLiteModel->getQueries('MySQL'),
@@ -65,6 +65,19 @@ class ProfilingController extends AbstractActionController
             'lastQueryTime' => $lastQueryTime,
             'queries'       => $queries,
         ]);
+    }
+
+    public function resetAction()
+    {
+        try {
+            $this->sqlLiteModel->truncate();
+
+            $this->flashMessenger()->addSuccessMessage('Successfully truncated profiling table');
+        } catch (\Exception $e) {
+            $this->flashMessenger()->addErrorMessage($e->getMessage());
+        }
+
+        $this->redirect()->toRoute('profiling');
     }
 
 }

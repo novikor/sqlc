@@ -15,7 +15,7 @@ return [
     'router'             => [
         'routes' => [
             // a FAKE route if Apache virtual host is configured correctly
-            'terminal'     => [
+            'terminal'          => [
                 'type'    => Literal::class,
                 'options' => [
                     'route'    => '/terminal/',
@@ -25,7 +25,7 @@ return [
                     ],
                 ],
             ],
-            'home'     => [
+            'home'              => [
                 'type'    => Literal::class,
                 'options' => [
                     'route'    => '/',
@@ -35,7 +35,7 @@ return [
                     ],
                 ],
             ],
-            'generate' => [
+            'generate'          => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'    => '/generate[/]',
@@ -45,7 +45,7 @@ return [
                     ],
                 ],
             ],
-            'cleanTable' => [
+            'cleanTable'        => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'    => '/cleanTable[/]',
@@ -65,7 +65,7 @@ return [
                     ],
                 ],
             ],
-            'refreshFullText' => [
+            'refreshFullText'   => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'    => '/refreshFullText[/]',
@@ -75,13 +75,26 @@ return [
                     ],
                 ],
             ],
-            'profiling' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/profiling[/]',
+            'profiling'         => [
+                'type'            => Segment::class,
+                'options'         => [
+                    'route'    => '/profiling/',
                     'defaults' => [
                         'controller' => Controller\ProfilingController::class,
                         'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes'    => [
+                    'reset' => [
+                        'type'    => Segment::class,
+                        'options' => [
+                            'route'    => '/reset[/]',
+                            'defaults' => [
+                                'controller' => Controller\ProfilingController::class,
+                                'action'     => 'reset',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -89,7 +102,7 @@ return [
     ],
     'controllers'        => [
         'factories'  => [
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class     => InvokableFactory::class,
             Controller\ProfilingController::class => InvokableFactory::class,
         ],
         'invokables' => [
@@ -99,16 +112,16 @@ return [
     'view_helpers'       => [
         'invokables' => [
             'tableHelper' => View\Helper\Table::class,
-            'helper' => View\Helper\Data::class,
+            'helper'      => View\Helper\Data::class,
         ],
     ],
-    'view_manager' => [
+    'view_manager'       => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
-        'template_map' => [
+        'template_map'             => [
             'layout/layout'                 => __DIR__ . '/../view/layout/layout.phtml',
             'layout/profiling'              => __DIR__ . '/../view/layout/profiling/layout.phtml',
             'sqlc/index/index'              => __DIR__ . '/../view/sqlc/index/index.phtml',

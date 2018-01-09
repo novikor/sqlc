@@ -117,4 +117,9 @@ class Profiling
 
          return $sql->prepareStatementForSqlObject($select)->execute();
     }
+
+    public function truncate()
+    {
+        $this->adapter->query('DELETE FROM profiling', Adapter::QUERY_MODE_EXECUTE);
+    }
 }
