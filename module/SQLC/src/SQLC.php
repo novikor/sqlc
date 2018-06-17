@@ -2,8 +2,6 @@
 
 namespace SQLC;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,15 +13,22 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SQLC
 {
+    /**
+     *
+     */
     const SQLITE_INSTALL_SCRIPT = BP . '/sql/sqlite/install.sql';
     /**
      * @var ServiceLocatorInterface
      */
     protected static $serviceLocator;
     /**
-     * @var
+     * @var \SQLC\SQLC
      */
     protected static $instance;
+    /**
+     * @var \SQLC\EventManager
+     */
+    protected static $eventManager;
     /**
      * @var \Zend\Db\Adapter\Adapter
      */
@@ -56,9 +61,7 @@ class SQLC
                 'Oracle XE' => $this->oracleAdapter,
             ];
 
-        } catch (NotFoundExceptionInterface $e) {
-            echo $e;
-        } catch (ContainerExceptionInterface $e) {
+        } catch (\Exception $e) {
             echo $e;
         }
     }
@@ -86,9 +89,12 @@ class SQLC
         $pdo->exec($installSql);
     }
 
-    public function sqlite()
+    /**
+     * @return \SQLC\EventManager
+     */
+    public static function getEventManager(): EventManager
     {
-        return $this->sqliteAdapter;
+        return static::$eventManager;
     }
 
     /**
@@ -105,7 +111,32 @@ class SQLC
     public static function init(MvcEvent $mvcEvent)
     {
         static::$serviceLocator = $mvcEvent->getApplication()->getServiceManager();
+        static::$eventManager = static::$serviceLocator->get(EventManager::class);
         self::$instance = new self();
+
+        static::initObservers();
+    }
+
+
+    /**
+     * Initialize observers
+     * @see ../config/observers.php
+     */
+    protected static function initObservers()
+    {
+        $observersList = require __DIR__ . '/../config/observers.php';
+
+        foreach ($observersList as $event => $observer) {
+            static::$eventManager->attachObserver($observer, $event);
+        }
+    }
+
+    /**
+     * @return mixed|\Zend\Db\Adapter\Adapter
+     */
+    public function sqlite()
+    {
+        return $this->sqliteAdapter;
     }
 
     /**

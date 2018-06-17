@@ -12,4 +12,5 @@ return [
     Model\Mysql\Time::class               => InvokableFactory::class,
     Model\Oracle\Time::class              => InvokableFactory::class,
     Model\TimeFactory::class              => InvokableFactory::class,
+    EventManager::class                   => InvokableFactory::class,
 ];

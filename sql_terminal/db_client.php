@@ -1,4 +1,8 @@
 <?php
+
+use SQLC\Model\Observer\Terminal;
+use SQLC\SQLC;
+
 abstract class DbClient{
     protected $conn;
     protected $server;
@@ -227,7 +231,7 @@ abstract class DbClient{
         $query = $this->do_driver_query($command); 
         $end = microtime(true);
 
-        $this->profileQuery($command);
+        SQLC::getEventManager()->dispatchEvent(Terminal::EVENT, get_class($this), $command);
 
         $this->time = (float)($end - $start);
         $this->info = $this->getQueryInfo();
@@ -250,14 +254,6 @@ abstract class DbClient{
         $this->user = $preCon->user ?? $this->user;
         $this->server = $preCon->host ?? $this->server;
         $this->port = $preCon->port ?? $this->port;
-    }
-
-    protected function profileQuery($sql)
-    {
-        /** @var \SQLC\Model\TimeFactory  $timeModelFactory */
-        $timeModelFactory= \SQLC\SQLC::getServiceLocator()->get(\SQLC\Model\TimeFactory::class);
-
-        $timeModelFactory->create(ucfirst(get_class($this)))->profileQuery($sql);
     }
 }
 
