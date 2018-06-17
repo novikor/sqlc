@@ -5,7 +5,7 @@ CREATE FUNCTION getTableSize(tableName VARCHAR(50))
   RETURNS INTEGER
   BEGIN
     DECLARE kb_size INTEGER;
-    SELECT ((data_length + index_length) / 1024) as size
+    SELECT ((data_length + index_length) / 1024) AS size
     INTO kb_size
     FROM information_schema.TABLES
     WHERE table_schema = DATABASE()
@@ -16,3 +16,4 @@ CREATE FUNCTION getTableSize(tableName VARCHAR(50))
 
 SELECT getTableSize('text_fulltextindex') AS SIZE_KB
 FROM dual;
+

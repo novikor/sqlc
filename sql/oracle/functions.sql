@@ -2,12 +2,11 @@ CREATE OR REPLACE FUNCTION getTableSize(tableName VARCHAR)
   RETURN INTEGER
 IS kb_size INTEGER;
   BEGIN
-    SELECT
-      SUM(bytes)/1024 as kb_size
+    SELECT SUM(bytes) / 1024 AS kb_size
     INTO kb_size
     FROM user_segments
-       WHERE segment_type='TABLE'
-    AND segment_name = UPPER(tableName);
+    WHERE segment_type = 'TABLE'
+          AND segment_name = UPPER(tableName);
     RETURN kb_size;
   END;
 
@@ -21,10 +20,10 @@ IS kb_size INTEGER;
 CREATE OR REPLACE FUNCTION getQueryExecutionTime(sqlQuery VARCHAR)
   RETURN NUMBER
 IS
-  TYPE EmpCurTyp  IS REF CURSOR;
-  t NUMBER;
-  plsql_block VARCHAR (255);
-  cusror EmpCurTyp;
+  TYPE EMPCURTYP IS REF CURSOR;
+  t           NUMBER;
+  plsql_block VARCHAR(255);
+  cusror      EMPCURTYP;
   BEGIN
     plsql_block :=
     'SELECT
@@ -32,7 +31,7 @@ IS
     FROM v$sqlarea
     WHERE SQL_TEXT = :sqlQuery';
 
-      -- Open cursor & specify bind variable in USING clause:
+    -- Open cursor & specify bind variable in USING clause:
     OPEN cusror FOR plsql_block USING sqlQuery;
 
     -- Fetch rows from result set one at a time:
@@ -51,11 +50,11 @@ IS
 CREATE OR REPLACE FUNCTION execAndGetTime(sqlQuery VARCHAR)
   RETURN NUMBER
 IS
-  TYPE EmpCurTyp  IS REF CURSOR;
+  TYPE EMPCURTYP IS REF CURSOR;
   t_before NUMBER;
-  t_after NUMBER;
-  cusror EmpCurTyp;
-  PRAGMA AUTONOMOUS_TRANSACTION;
+  t_after  NUMBER;
+  cusror   EMPCURTYP;
+PRAGMA AUTONOMOUS_TRANSACTION;
   BEGIN
     t_before := NVL(GETQUERYEXECUTIONTIME(sqlQuery), 0);
 

@@ -229,7 +229,7 @@ abstract class DbClient{
 
         $this->profileQuery($command);
 
-        $this->time = $end - $start;
+        $this->time = (float)($end - $start);
         $this->info = $this->getQueryInfo();
         $result = array('info' => array(), 'table' => array());
         if (is_object($query) || is_resource($query)){
