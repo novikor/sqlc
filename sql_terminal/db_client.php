@@ -254,11 +254,10 @@ abstract class DbClient{
 
     protected function profileQuery($sql)
     {
-        /** @var SQLC\Model\Time|false  $timeModel */
-        $timeModel= \SQLC\SQLC::getServiceLocator()->build(\SQLC\Model\Time::class, ['type'=> get_class($this)]);
-        if($timeModel){
-            $timeModel->profileQuery($sql);
-        }
+        /** @var \SQLC\Model\TimeFactory  $timeModelFactory */
+        $timeModelFactory= \SQLC\SQLC::getServiceLocator()->get(\SQLC\Model\TimeFactory::class);
+
+        $timeModelFactory->create(ucfirst(get_class($this)))->profileQuery($sql);
     }
 }
 
